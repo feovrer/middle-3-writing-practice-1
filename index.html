@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>should have 서술형 연습</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 친절한 선생님의 채점지 — 차분하고 또렷하게
+   IDEA: 줄 공책 위의 서술형 답안지, 빨간 펜으로 채점
+   PICTURE: 대화가 적힌 답안지 카드 자체가 그림, 채점 결과는 빨간 펜 동그라미
+   COLOUR and TYPE: 종이 흰색 + 잉크 남색 + 빨간 펜; Noto Sans KR + Nanum Pen Script
+   LAYOUT: 한 열, 위에 진행 점, 가운데 문제 카드, 아래 입력·피드백 */
+:root{color-scheme:light dark;
+--bg:light-dark(#eef2f7,#0f1626);--paper:light-dark(#ffffff,#18223a);--ink:light-dark(#1b2a4a,#e6ecf7);
+--soft:light-dark(#5b6b88,#a3b0c9);--line:light-dark(#d6e0ee,#2a3756);--blue:light-dark(#2348b8,#8fb0ff);
+--red:light-dark(#d62839,#ff6b78);--ok:light-dark(#14804a,#5fd39a);--okbg:light-dark(#e7f6ee,#143326);--nobg:light-dark(#fdecee,#3a1a20);--hl:light-dark(#fff4c2,#3d3613)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans KR",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:760px;margin:0 auto;padding:clamp(20px,4vw,44px) max(4vw,14px) 60px}
+h1{font-size:clamp(26px,5vw,38px);line-height:1.1;margin:0 0 6px;font-weight:900;text-wrap:balance}
+.sub{color:var(--soft);margin:0 0 20px}
+.dots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.dot{width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:var(--paper);color:var(--ink);font:700 15px "Noto Sans KR";cursor:pointer}
+.dot.cur{border-color:var(--blue);color:var(--blue)}
+.dot.good{background:var(--ok);border-color:var(--ok);color:#fff}
+.dot.part{background:var(--red);border-color:var(--red);color:#fff}
+.card{background:var(--paper);border-radius:14px;box-shadow:0 1px 0 var(--line),0 10px 30px -18px rgba(20,40,90,.35);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;bottom:0;left:46px;width:2px;background:light-dark(#f3b5bb,#5a2a33)}
+.inner{padding:22px 22px 24px 64px}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-weight:900;font-size:20px}
+.pts{color:var(--soft);font-size:14px;white-space:nowrap}
+.cond{margin:12px 0 16px;padding:12px 14px;border:1.5px solid var(--ink);border-radius:6px;font-size:15px}
+.cond b{display:block;margin-bottom:4px}
+.cond ul{margin:0;padding-left:18px}
+.cond li.miss{color:var(--red);font-weight:700}
+.cond li.hit{color:var(--ok)}
+.dlg{border:1.5px solid var(--ink);border-radius:6px;padding:12px 14px;background-image:repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);line-height:32px}
+.dlg p{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px}
+.dlg .who{font-weight:700}
+.blank{display:inline-block;min-width:150px;border-bottom:2px solid var(--blue);color:var(--blue);font-weight:700}
+.blank.filled{background:var(--hl);padding:0 4px}
+label.ans{display:block;margin:18px 0 6px;font-weight:700}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+input[type=text]{flex:1 1 280px;font:16px "Noto Sans KR";padding:12px 14px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-height:48px}
+input[type=text]:focus{outline:none;border-color:var(--blue)}
+.wc{font-size:14px;color:var(--soft);margin-top:6px}
+.wc.bad{color:var(--red)}
+button.b{font:700 15px "Noto Sans KR";min-height:48px;padding:0 18px;border-radius:10px;border:2px solid var(--blue);cursor:pointer;background:var(--blue);color:#fff}
+button.g{background:transparent;color:var(--blue)}
+button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.fb{margin-top:16px;border-radius:10px;padding:14px 16px;display:none}
+.fb.show{display:block;animation:pop .25s ease}
+.fb.ok{background:var(--okbg)}.fb.no{background:var(--nobg)}
+.fb h3{margin:0 0 6px;font-size:18px}
+.fb ul{margin:6px 0 0;padding-left:20px}
+.mark{font:400 44px/1 "Nanum Pen Script",cursive;color:var(--red);position:absolute;right:18px;top:10px;transform:rotate(-8deg)}
+.model{margin-top:10px;padding-top:10px;border-top:1px dashed var(--soft)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:18px;flex-wrap:wrap}
+.hintbox{margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--hl);font-size:15px}
+.hintbox b{color:var(--red);margin-right:6px}
+.dot.ex{width:auto;border-radius:20px;padding:0 14px}
+.steps{list-style:none;margin:18px 0 0;padding:0;counter-reset:st}
+.steps>li{counter-increment:st;position:relative;padding:0 0 16px 44px}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;display:grid;place-items:center}
+.steps b.t{display:block;font-size:17px;margin-bottom:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{border:2px solid var(--blue);border-radius:8px;padding:2px 9px;font-weight:700;position:relative}
+.chip small{position:absolute;top:-10px;right:-6px;background:var(--red);color:#fff;border-radius:10px;font-size:11px;padding:0 5px;line-height:16px}
+.x{color:var(--red);font-weight:700}
+.ex-title{display:inline-block;background:var(--red);color:#fff;font-weight:900;border-radius:6px;padding:2px 10px;font-size:15px}
+.res{text-align:center;padding:34px 22px}
+.big{font:900 clamp(48px,12vw,84px)/1 "Noto Sans KR";color:var(--red)}
+.restbl{width:100%;border-collapse:collapse;margin:20px 0;text-align:left;font-size:15px}
+.restbl td,.restbl th{padding:8px;border-bottom:1px solid var(--line)}
+.restbl td.n{text-align:right;white-space:nowrap}
+.tip{font-size:14px;color:var(--soft);margin-top:20px}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.fb.show{animation:none}}
+@media(max-width:600px){.card::before{left:22px}.inner{padding:18px 14px 20px 34px}.mark{font-size:36px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>서술형 연습: should have + p.p.</h1>
+  <p class="sub">과거에 하지 못한 일에 대한 후회를 7단어 영어 문장으로 써 보세요. 모두 6문항이고, 문항당 5점이에요.</p>
+  <div class="dots" id="dots" aria-label="문항 이동"></div>
+  <div class="card" id="card"></div>
+  <p class="tip">대소문자와 마침표까지 정확히 써야 만점이에요. 축약형(should've 등)은 쓸 수 없어요.</p>
+</div>
+<script>
+{
+const Q=[
+ {v:'study',pp:'studied',wrong:['study','studies','studying'],d:[['Jisu','Seojun, how was your math test?'],['Seojun','Not good. I played games all week and opened my book only the night before. My score was really low. ___.'],['Jisu',"Don't worry. You can do better next time."]],model:'I should have studied harder for it.',ok:['i should have studied harder for it','i should have studied more for it'],hint:'study의 과거분사는 y를 i로 바꾸고 -ed를 붙여요. “더 열심히”는 harder.'},
+ {v:'leave',pp:'left',wrong:['leave','leaved','leaving','leaves'],d:[['Teacher',"Hana, you're late again. What happened?"],['Hana',"I'm sorry. I got up late, and when I got to the bus stop, the school bus had already gone. ___."],['Teacher','OK. Please try to come on time tomorrow.']],model:'I should have left home earlier today.',ok:['i should have left home earlier today','i should have left my house earlier','i should have left home much earlier','i should have left the house earlier'],hint:'leave - left - left (불규칙). “더 일찍”은 earlier.'},
+ {v:'wear',pp:'worn',wrong:['wear','wore','weared','wearing'],d:[['Mina',"Brr! It's so cold and windy on this boat."],['Junho',"I know. I'm only wearing this thin T-shirt. I'm freezing. ___."],['Mina','Here, you can use my scarf.']],model:'I should have worn a warmer jacket.',ok:['i should have worn a warmer jacket','i should have worn warmer clothes today','i should have worn a thicker jacket','i should have worn a warmer coat','i should have worn a thicker coat','i should have worn a warmer sweater'],hint:'wear - wore - worn (불규칙). “더 따뜻한”은 warmer.'},
+ {v:'go',pp:'gone',wrong:['go','went','goed','going','goes'],d:[['Mom','Minjae, you look so tired this morning.'],['Minjae',"I stayed up until 2 a.m. watching videos on my phone. Now I can't stop yawning. ___."],['Mom','Then remember that tonight.']],model:'I should have gone to bed earlier.',ok:['i should have gone to bed earlier','i should have gone to sleep earlier'],hint:'go - went - gone (불규칙). go to bed + 비교급.'},
+ {v:'eat',pp:'eaten',wrong:['eat','ate','eated','eating','eats'],d:[['Yuna','Are you OK, Dohyun? You look sick.'],['Dohyun','I finished my lunch in just five minutes because I wanted to play soccer. Now my stomach hurts. ___.'],['Yuna',"Let's go to the nurse's office together."]],model:'I should have eaten more slowly today.',ok:['i should have eaten more slowly today','i should have eaten lunch more slowly','i should have eaten much more slowly'],hint:'eat - ate - eaten (불규칙). slowly의 비교급은 more slowly.'},
+ {v:'take',pp:'taken',wrong:['take','took','taked','taking','takes'],d:[['Sora',"Haneul, you're all wet!"],['Haneul','I brought my tiny umbrella this morning, but the rain was too heavy. ___.'],['Sora','Here, dry yourself with this towel.']],model:'I should have taken a bigger umbrella.',ok:['i should have taken a bigger umbrella','i should have taken a larger umbrella'],hint:'take - took - taken (불규칙). big의 비교급은 g를 한 번 더 써서 bigger.'}
+];
+const COMP=new Set(['more','less','earlier','harder','warmer','bigger','larger','better','longer','faster','slower','thicker','heavier','later','sooner','smaller','stronger','safer','easier','quicker']);
+const NOTCOMP=new Set(['never','after','other','over','under','water','sister','brother','teacher','paper','winter','summer','together','dinner','number','ever','however','umbrella','sweater','soccer','computer','mother','father','letter','order','ticket']);
+const st=Q.map(()=>({ans:'',score:null,wrong:0,checks:null}));
+let cur=-1;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const words=s=>s.trim().replace(/[.!?,]+$/,'').split(/\s+/).filter(Boolean);
+const norm=s=>words(s).join(' ').toLowerCase().replace(/[.,!?]/g,'');
+
+function grade(q,raw){
+  const s=raw.trim(), w=words(s), lw=words(s.replace(/should['’]ve/gi,'should have')).map(x=>x.toLowerCase().replace(/[.,!?]/g,''));
+  const contr=/['’]/.test(s);
+  const iSh=lw.indexOf('should');
+  const hasHave=iSh>=0&&lw[iSh+1]==='have';
+  const verb=hasHave?lw[iSh+2]:'';
+  const formOK=hasHave&&verb===q.pp;
+  const usedVerb=lw.includes(q.pp)||q.wrong.some(x=>lw.includes(x));
+  const comp=lw.some(x=>COMP.has(x)||(x.length>4&&x.endsWith('er')&&!NOTCOMP.has(x)));
+  const seven=w.length===7&&!contr;
+  const cap=/^[A-Z]/.test(s), dot=/\.$/.test(s);
+  const c={should:iSh>=0&&usedVerb,comp,seven,regret:formOK};
+  const exact=q.ok.includes(norm(s));
+  let pts=5, msg=[];
+  if(iSh<0){pts-=2;msg.push('should가 빠졌어요.')}
+  if(!usedVerb){pts-=2;msg.push(`동사 ${q.v}(의 알맞은 형태)를 써야 해요.`)}
+  else if(!formOK){pts-=2;
+    if(!hasHave)msg.push('과거에 대한 후회는 <b>should have + 과거분사</b>로 써요. have가 빠졌거나 위치가 달라요.');
+    else msg.push(`should have 뒤에는 과거분사가 와요. <b>${esc(verb)}</b>는 알맞은 형태가 아니에요.`)}
+  if(!comp){pts-=1;msg.push('비교급 표현(earlier, harder, more ~ 등)이 없어요.')}
+  if(contr){pts-=1;msg.push("축약형(')은 쓸 수 없어요.")}
+  else if(w.length!==7){pts-=1;msg.push(`지금 ${w.length}단어예요. 정확히 7단어로 써야 해요.`)}
+  if(!cap||!dot){pts-=1;msg.push('문장은 대문자로 시작하고 마침표로 끝내요.')}
+  pts=Math.max(0,pts);
+  const allCond=c.should&&c.comp&&c.seven&&c.regret;
+  return {pts,msg,c,exact,allCond};
+}
+
+function dots(){
+  $('dots').innerHTML=`<button class="dot ex ${cur===-1?'cur':''}" data-i="-1">예시</button>`+Q.map((q,i)=>{const s=st[i];const cls=s.score===null?'':s.score===5?'good':'part';
+    return `<button class="dot ${cls} ${i===cur?'cur':''}" data-i="${i}" aria-label="${i+1}번 문항">${i+1}</button>`}).join('')+
+    `<button class="dot ${cur===Q.length?'cur':''}" data-i="${Q.length}" aria-label="결과 보기">✓</button>`;
+}
+
+function render(){
+  dots();
+  if(cur===Q.length)return result();
+  if(cur===-1)return intro();
+  const q=Q[cur],s=st[cur],ck=s.checks;
+  const li=(k,t)=>`<li class="${ck?(ck[k]?'hit':'miss'):''}">${t}</li>`;
+  const fill=s.ans?`<span class="blank filled">${esc(s.ans.replace(/\.$/,''))}</span>`:'<span class="blank">&nbsp;</span>';
+  $('card').innerHTML=`<div class="inner">
+   ${s.score===5?'<div class="mark" aria-hidden="true">참 잘했어요</div>':''}
+   <div class="qhead"><span class="qnum">${cur+1}번</span><span class="pts">5점</span></div>
+   <p style="margin:6px 0 0">자연스러운 대화가 되도록 빈칸에 들어갈 문장을 &lt;조건&gt;에 맞게 서술하시오.</p>
+   <div class="cond"><b>&lt;조건&gt;</b><ul>
+     ${li('should',`should, ${q.v}를 포함하되, 필요하면 형태를 바꿀 것.`)}
+     ${li('comp','비교급 표현을 포함할 것.')}
+     ${li('seven','7단어로 쓸 것. (축약형은 쓰지 말 것)')}
+     ${li('regret','과거의 일에 대한 후회를 나타낼 것.')}
+   </ul></div>
+   <div class="dlg">${q.d.map(([w,t])=>`<p><span class="who">${w}:</span><span>${esc(t).replace('___',fill)}</span></p>`).join('')}</div>
+   <label class="ans" for="in">→ 내 답</label>
+   <div class="row"><input type="text" id="in" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="영어 문장을 입력하세요" value="${esc(s.ans)}">
+   <button class="b" id="chk">채점하기</button></div>
+   <div class="wc" id="wc"></div>
+   <div class="fb" id="fb"></div>
+   <div class="nav"><button class="b g" id="prev">${cur===0?'← 예시 보기':'← 이전'}</button>
+   <button class="b" id="next">${cur===Q.length-1?'결과 보기':'다음 →'}</button></div></div>`;
+  const inp=$('in');
+  const wc=()=>{const n=words(inp.value).length;$('wc').textContent=inp.value.trim()?`단어 수: ${n} / 7`:'';$('wc').className='wc'+(n&&n!==7?' bad':'')};
+  inp.addEventListener('input',wc);wc();
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')check()});
+  $('chk').onclick=check;
+  $('prev').onclick=()=>{cur--;render()};
+  $('next').onclick=()=>{cur++;render()};
+  if(s.score!==null)showFb(grade(q,s.ans));
+}
+
+function intro(){
+  const ans=['I','should','have','brought','a','bigger','bag.'];
+  $('card').innerHTML=`<div class="inner">
+   <span class="ex-title">예시 문제</span>
+   <p style="margin:10px 0 0">문제를 풀기 전에 어떻게 푸는지 함께 살펴봐요.</p>
+   <div class="cond"><b>&lt;조건&gt;</b><ul>
+     <li>should, bring을 포함하되, 필요하면 형태를 바꿀 것.</li>
+     <li>비교급 표현을 포함할 것.</li>
+     <li>7단어로 쓸 것. (축약형은 쓰지 말 것)</li>
+     <li>과거의 일에 대한 후회를 나타낼 것.</li></ul></div>
+   <div class="dlg">
+     <p><span class="who">Jiho:</span><span>Eunbi, did you carry all your new books home?</span></p>
+     <p><span class="who">Eunbi:</span><span>No. I bought ten books at the book fair, but my bag was too small. <span class="blank filled">I should have brought a bigger bag</span>.</span></p>
+     <p><span class="who">Jiho:</span><span>Next time, you can use mine.</span></p></div>
+   <ol class="steps">
+     <li><b class="t">상황 파악하기</b>가방이 작아서 책을 다 못 담았어요. 이미 지나간 일을 후회하니까 <b>should have + 과거분사(p.p.)</b>를 써요.</li>
+     <li><b class="t">동사 형태 바꾸기</b>bring – brought – <b>brought</b> → should have <b>brought</b></li>
+     <li><b class="t">비교급 넣기</b>“더 큰 가방”이 필요했어요. big → <b>bigger</b> (g를 한 번 더 써요)</li>
+     <li><b class="t">7단어인지 세어 보기</b>should have는 2단어로 세요. 대문자로 시작하고 마침표로 끝내요.
+       <div class="chips">${ans.map((w,i)=>`<span class="chip">${w}<small>${i+1}</small></span>`).join('')}</div></li>
+     <li><b class="t">이렇게 쓰면 틀려요</b>
+       <span class="x">✗</span> I should have <u>bring</u> a bigger bag. (원형 ✗)<br>
+       <span class="x">✗</span> I <u>should've</u> brought a bigger bag. (축약형 ✗)<br>
+       <span class="x">✗</span> I should have brought a <u>big</u> bag. (비교급 ✗)</li>
+   </ol>
+   <div class="nav" style="justify-content:flex-end"><button class="b" id="start">이해했어요! 1번 풀기 →</button></div></div>`;
+  $('start').onclick=()=>{cur=0;render()};
+}
+
+function showFb(r){
+  const q=Q[cur],s=st[cur],fb=$('fb');
+  let h;
+  if(r.pts===5&&r.exact)h=`<h3>정답이에요! 5 / 5점</h3><p>조건을 모두 지킨 완벽한 문장이에요.</p>`;
+  else if(r.pts===5)h=`<h3>조건은 모두 맞았어요! 5 / 5점</h3><p>대화 흐름에도 맞는지 선생님 답과 비교해 보세요.</p>`;
+  else h=`<h3>${r.pts} / 5점 — 다시 도전해 보세요</h3><ul>${r.msg.map(m=>`<li>${m}</li>`).join('')}</ul>`;
+  if(r.pts<5)h+=`<div class="hintbox"><b>힌트</b> ${esc(q.hint)}</div>`;
+  if(r.pts===5||s.wrong>=2)h+=`<div class="model"><b>${r.pts<5?'두 번 틀렸으니 정답을 알려 줄게요':'선생님 답'}:</b> ${esc(q.model)}</div>`;
+  else h+=`<p style="margin:8px 0 0;font-size:14px">힌트를 보고 다시 써 보세요. 한 번 더 틀리면 정답이 공개돼요.</p>`;
+  fb.className='fb show '+(r.pts===5?'ok':'no');fb.innerHTML=h;
+}
+
+function check(){
+  const q=Q[cur],s=st[cur],v=$('in').value;
+  if(!v.trim()){$('wc').textContent='먼저 답을 입력하세요.';$('wc').className='wc bad';return}
+  const r=grade(q,v);
+  s.ans=v.trim();if(r.pts<5)s.wrong++;s.checks=r.c;s.score=r.pts;
+  render();
+}
+
+function result(){
+  const done=st.filter(s=>s.score!==null).length,total=st.reduce((a,s)=>a+(s.score||0),0);
+  $('card').innerHTML=`<div class="res">
+   <div class="big">${total}<span style="font-size:.4em;color:var(--soft)"> / 30</span></div>
+   <p>${done<Q.length?`아직 ${Q.length-done}문항을 풀지 않았어요.`:total===30?'모든 문항 만점! 시험도 이대로만 하면 돼요.':'틀린 문항을 다시 풀어 보세요.'}</p>
+   <table class="restbl"><thead><tr><th>번호</th><th>내 답</th><th>점수</th></tr></thead><tbody>
+   ${Q.map((q,i)=>`<tr><td>${i+1}</td><td>${st[i].ans?esc(st[i].ans):'<span style="color:var(--soft)">미응답</span>'}</td><td class="n">${st[i].score===null?'-':st[i].score+'점'}</td></tr>`).join('')}
+   </tbody></table>
+   <div class="row" style="justify-content:center"><button class="b g" id="redo">틀린 문항 다시 풀기</button><button class="b" id="reset">처음부터 다시</button></div></div>`;
+  $('redo').onclick=()=>{const i=st.findIndex(s=>s.score!==5);cur=i<0?0:i;st.forEach(s=>{if(s.score!==5){s.wrong=0}});render()};
+  $('reset').onclick=()=>{st.forEach(s=>{s.ans='';s.score=null;s.wrong=0;s.checks=null});cur=-1;render()};
+}
+
+$('dots').addEventListener('click',e=>{const b=e.target.closest('.dot');if(b){cur=+b.dataset.i;render()}});
+render();
+}
+</script>
+</body>
+</html>
